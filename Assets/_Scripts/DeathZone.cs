@@ -8,19 +8,24 @@ public class DeathZone : MonoBehaviour
     public Transform startPos;
     public GameObject ballPrefab;
     public int opposingPlayer; 
+    public AudioClip outSound;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.CompareTag("Ball"))
-            // Debug.Log($"{other.transform.name} just entered {transform.name}");
-            // TODO: set other player's score up by 1
-            ScoreManager.AddScore(opposingPlayer);
+            AudioSource.PlayClipAtPoint(outSound, other.transform.position, 1.0f);
+        // Debug.Log($"{other.transform.name} just entered {transform.name}");
+        // TODO: set other player's score up by 1
+        ScoreManager.AddScore(opposingPlayer);
 
 
         // TODO: destroy this ball (other)
         Destroy(other.gameObject);
 
         // TODO: instantiate a new ball in the center
-        Instantiate(ballPrefab, startPos.position, Quaternion.identity);
+        if (ScoreManager.playing)
+        {
+            Instantiate(ballPrefab, startPos.position, Quaternion.identity);
+        }
     }
 }
